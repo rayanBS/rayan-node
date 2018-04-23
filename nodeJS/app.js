@@ -1,41 +1,10 @@
-let http = require('http');
-let fs = require('fs');
-let url = require('url');
+const express = require('express')
+const path = require('path')
+const PORT = process.env.PORT || 5000
 
-let server = http.createServer();
-
-server.on("request", (request, response) => {
-
-	response.writeHead(200);
-
-	let query = url.parse(request.url, true).query;
-	if(query.name == undefined){
-		response.write("Bonjour Anonyme !");
-	}
-	else{
-		response.write("Bonjour " + query.name + " !");
-	}
-	response.end();
-
-	/*
-	fs.readFile("index.html", (err, data) => {
-		if(err){
-			response.writeHead(404);
-			response.end("Ce fichier n'existe pas !");
-		}
-		else{
-			response.writeHead(200, {
-				"Content-type": "text/html; charset=utf-8"
-			});
-			response.end(data);
-		}
-	});
-	*/
-
-
-	
-	
-});
-
-
-server.listen(8080);
+express()
+  .use(express.static(path.join(__dirname, 'public')))
+  .set('views', path.join(__dirname, 'views'))
+  .set('view engine', 'ejs')
+  .get('/', (req, res) => res.render('pages/index'))
+.listen(PORT, () => console.log(`Listening on ${ PORT }`))
